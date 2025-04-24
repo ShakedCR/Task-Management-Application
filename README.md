@@ -2,7 +2,7 @@
  an application to manage tasks effectively.
  # 📝 Task Management App
 
-This is a full-stack task management application built with **React** (frontend), **Express.js** (backend), and **MongoDB Atlas** (cloud database), all containerized using **Docker** and orchestrated with **Docker Compose**.
+This is a task management application built with **React** (frontend), **Express.js** (backend), and **MongoDB Atlas** (cloud database), all containerized using **Docker** and orchestrated with **Docker Compose**.
 
 > ✅ Everything is pre-configured: no need to set up any database manually.  
 > All you need is [Docker Desktop](https://www.docker.com/products/docker-desktop) installed.
