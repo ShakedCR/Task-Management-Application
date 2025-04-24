@@ -7,7 +7,7 @@ services:
     ports:
       - "4000:4000"
     env_file:
-      - ./server/.env
+      - ./server/.env  # לוודא שזה קיים ב־server
 
   client:
     build:
