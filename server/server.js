@@ -1,11 +1,11 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-require('dotenv').config(); // 🟢 טוען את הקובץ .env
+require('dotenv').config(); // טוען את קובץ הסביבה או משתני סביבה של דוקר
 
 const app = express();
 
-// ✅ התחברות ל-MongoDB דרך משתנה סביבה
+// התחברות ל-MongoDB דרך משתנה סביבה
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('✅ Connected to MongoDB Atlas'))
   .catch(err => console.error('❌ MongoDB connection error:', err));

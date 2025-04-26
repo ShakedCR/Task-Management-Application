@@ -6,8 +6,8 @@ services:
       context: ./server
     ports:
       - "4000:4000"
-    env_file:
-      - ./server/.env  # לוודא שזה קיים ב־server
+    environment:
+      - MONGO_URI=mongodb+srv://shakedcrissy18:Aeserhxh0210@cluster0.9kztbwf.mongodb.net/taskmanager?retryWrites=true&w=majority&appName=Cluster0
 
   client:
     build:
