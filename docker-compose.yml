@@ -6,9 +6,9 @@ services:
       context: ./server
     ports:
       - "4000:4000"
-    environment:
-      - MONGO_URI=mongodb+srv://shakedcrissy18:Aeserhxh0210@cluster0.9kztbwf.mongodb.net/taskmanager?retryWrites=true&w=majority&appName=Cluster0
-
+    env_file:
+      - ./server/.env
+      
   client:
     build:
       context: ./client
@@ -16,3 +16,4 @@ services:
       - "3000:80"
     depends_on:
       - server
+

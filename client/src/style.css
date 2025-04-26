@@ -6,7 +6,7 @@
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(to right, #00c6ff, #0072ff);
+  background: linear-gradient(to right, #00ff66, #00f2ff);
   color: #333;
   min-height: 100vh;
   display: flex;
@@ -101,7 +101,7 @@ body {
 .task-form button {
   padding: 10px 15px;
   border: none;
-  background-color: #0072ff;
+  background-color: #00d0ff;
   color: white;
   border-radius: 8px;
   cursor: pointer;

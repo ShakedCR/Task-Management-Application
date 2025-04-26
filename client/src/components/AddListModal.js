@@ -1,16 +1,18 @@
 import { useState } from 'react';
 
-function AddListModal({ isOpen, onClose, onSave }) {
+// Modal for creating a new list
+function AddListModal({ isOpen, onSave, onClose }) {
   const [listName, setListName] = useState('');
 
   const handleSave = () => {
     if (listName.trim()) {
       onSave(listName);
-      setListName('');
-      onClose();
+      setListName(''); // Clear input after saving
+      onClose();       // Close the modal
     }
   };
 
+  // Don't render anything if the modal is closed
   if (!isOpen) return null;
 
   return (

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 
+// Modal for editing a task
 function EditModal({ isOpen, onClose, taskValue, taskDesc, taskDueDate, onSave }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -42,7 +43,7 @@ function EditModal({ isOpen, onClose, taskValue, taskDesc, taskDueDate, onSave }
         />
         <div className="modal-actions">
           <button onClick={handleSave}>Save</button>
-          <button onClick={() => onClose && onClose()}>Cancel</button>
+          <button onClick={onClose}>Cancel</button>
         </div>
       </div>
     </div>

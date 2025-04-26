@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import EditModal from './EditModal';
 
+// Task list component
 function TaskList({ listId }) {
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState('');
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTaskId, setEditingTaskId] = useState(null);
   const [editedText, setEditedText] = useState('');
@@ -19,27 +19,21 @@ function TaskList({ listId }) {
     fetch(`http://localhost:4000/tasks/${listId}`)
       .then(res => res.json())
       .then(data => {
-        // מוסיפים id רגיל על בסיס _id
         const normalized = data.map(task => ({ ...task, id: task._id }));
         setTasks(normalized);
       })
-      .catch(err => console.error("Failed to load tasks", err));
+      .catch(err => console.log("Failed to load tasks", err));
   }, [listId]);
 
   const addTask = () => {
     if (!title.trim()) return;
 
-    const newTask = {
-      title,
-      description,
-      date: dueDate,
-      listId
-    };
+    const newTask = { title, description, date: dueDate, listId };
 
     fetch("http://localhost:4000/tasks", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newTask)
+      body: JSON.stringify(newTask),
     })
       .then(res => res.json())
       .then(addedTask => {
@@ -48,7 +42,7 @@ function TaskList({ listId }) {
         setDescription('');
         setDueDate('');
       })
-      .catch(err => console.error("Failed to add task", err));
+      .catch(err => console.log("Failed to add task", err));
   };
 
   const deleteTask = (id, status) => {
@@ -62,19 +56,19 @@ function TaskList({ listId }) {
         setTasks(tasks.filter(task => task.id !== id));
       })
       .catch(err => {
-        console.error('Failed to delete task:', err);
-        alert('שגיאה במחיקת משימה 😥');
+        console.log('Failed to delete task:', err);
+        alert('Failed to delete task.');
       });
   };
 
   const advanceStatus = (task) => {
+    if (task.status === 'Done') return;
+
     const next = {
       'To Do': 'In Work',
       'In Work': 'Done',
       'Done': 'Done',
     }[task.status];
-
-    if (task.status === 'Done') return;
 
     fetch(`http://localhost:4000/tasks/${task.id}/status`, {
       method: "PUT",
@@ -85,14 +79,14 @@ function TaskList({ listId }) {
         if (!res.ok) throw new Error("Failed to update status");
         return res.json();
       })
-      .then((updatedTask) => {
+      .then(updatedTask => {
         setTasks(tasks.map(t =>
           t.id === task.id ? { ...t, status: updatedTask.status } : t
         ));
       })
       .catch(err => {
-        console.error("Status update failed:", err);
-        alert("שגיאה בעדכון סטטוס 😥");
+        console.log("Status update failed:", err);
+        alert("Failed to update status.");
       });
   };
 
@@ -122,8 +116,8 @@ function TaskList({ listId }) {
         setIsModalOpen(false);
       })
       .catch(err => {
-        console.error('Failed to update task:', err);
-        alert('שגיאה בעדכון משימה 😥');
+        console.log('Failed to update task:', err);
+        alert('Failed to update task.');
       });
   };
 
@@ -142,9 +136,9 @@ function TaskList({ listId }) {
               </div>
               {status !== 'Done' && (
                 <>
-                  <button onClick={() => advanceStatus(task)}>➡️</button>
-                  <button onClick={() => openEditModal(task)}>✏️</button>
-                  <button onClick={() => deleteTask(task.id, task.status)}>❌</button>
+                  <button onClick={() => advanceStatus(task)}>Advance</button>
+                  <button onClick={() => openEditModal(task)}>Edit</button>
+                  <button onClick={() => deleteTask(task.id, task.status)}>Delete</button>
                 </>
               )}
             </li>
