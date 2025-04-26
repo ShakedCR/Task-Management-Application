@@ -1,10 +1,14 @@
-# Task-Management-Application
- an application to manage tasks effectively.
- # 📝 Task Management App
+# 📝 Task Management Application
 
-This is a task management application built with **React** (frontend), **Express.js** (backend), and **MongoDB Atlas** (cloud database), all containerized using **Docker** and orchestrated with **Docker Compose**.
+This is a full-stack task management app built with:
 
-> ✅ Everything is pre-configured: no need to set up any database manually.  
+- ✅ **React** (frontend)  
+- ✅ **Express.js** (backend)  
+- ✅ **MongoDB Atlas** (cloud database)  
+- ✅ **Docker & Docker Compose** (for seamless deployment)
+
+> ✅ Everything is pre-configured:  
+> You **do not need to set up any `.env` file or database manually**.  
 > All you need is [Docker Desktop](https://www.docker.com/products/docker-desktop) installed.
 
 ---
@@ -13,19 +17,17 @@ This is a task management application built with **React** (frontend), **Express
 
 - Create, update, and delete task lists  
 - Add tasks with title, description, and due date  
-- Change task status: To Do, In Work, Done  
-- Edit and delete individual tasks  
-- Organize tasks by list  
+- Change task status: `To Do`, `In Work`, `Done`  
+- Cannot delete tasks marked as `Done`  
 - Clean, responsive, and mobile-friendly UI
 
 ---
 
 ## 🛠 Tech Stack
 
-- **Frontend:** React, CSS  
-- **Backend:** Express.js, Mongoose  
-- **Database:** MongoDB Atlas (hosted by the author)  
-- **DevOps:** Docker, Docker Compose  
+| Frontend  | Backend    | Database       | Deployment     |
+|-----------|------------|----------------|----------------|
+| React     | Express.js | MongoDB Atlas  | Docker Compose |
 
 ---
 
@@ -36,7 +38,6 @@ This is a task management application built with **React** (frontend), **Express
 ```bash
 git clone https://github.com/ShakedCR/Task-Management-Application.git
 cd Task-Management-Application
-
 ```
 
 ### 2. Run the App with Docker Compose
@@ -45,10 +46,10 @@ cd Task-Management-Application
 docker-compose up --build
 ```
 
-> This will automatically start both the backend (Node.js + MongoDB connection) and frontend (React + Nginx) using Docker.
+This will automatically start both the backend and frontend containers.
 
 - Client: [http://localhost:3000](http://localhost:3000)  
-- Server: [http://localhost:4000](http://localhost:4000)
+- Server API: [http://localhost:4000](http://localhost:4000)
 
 ---
 
@@ -58,25 +59,31 @@ docker-compose up --build
 TaskManagement/
 │
 ├── client/         # React frontend (with Dockerfile)
-├── server/         # Express backend (with Dockerfile + .env)
+├── server/         # Express backend (with Dockerfile)
 └── docker-compose.yml
 ```
 
 ---
 
-## 🔐 Environment Variables
+## 🔐 Environment & Security
 
-The application already uses a private MongoDB Atlas connection, defined securely in a `.env` file that is **not** shared in this repository.
+> **No `.env` file required.**  
+> The MongoDB connection string is securely provided to the backend using Docker environment variables (defined in `docker-compose.yml`).
 
-> You do **not** need to create your own `.env` or MongoDB account.  
-> The application is ready-to-run as-is.
+You **do not need** to create a MongoDB account or set anything up manually.
 
 ---
 
-## 🧠 Author
+## 👩‍💻 Author
 
-Developed with ❤️ by **Shaked Crissy**  
-Feel free to connect 
+Built with ❤️ by [Shaked Crissy](https://github.com/ShakedCR)  
+Feel free to explore, learn, and reuse this structure in your own full-stack projects!
+
+---
+
+## 📄 License
+
+This project is provided for demonstration and educational purposes only.
 
 ---
 
