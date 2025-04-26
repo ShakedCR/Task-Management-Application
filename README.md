@@ -77,7 +77,7 @@ You **do not need** to create a MongoDB account or set anything up manually.
 ## 👩‍💻 Author
 
 Built with ❤️ by [Shaked Crissy](https://github.com/ShakedCR)  
-Feel free to explore, learn, and reuse this structure in your own full-stack projects!
+Feel free to explore, learn, contact me (:
 
 ---
 
@@ -86,8 +86,3 @@ Feel free to explore, learn, and reuse this structure in your own full-stack pro
 This project is provided for demonstration and educational purposes only.
 
 ---
-
-## 📄 License
-
-This project is provided for demonstration and learning purposes only.
-
