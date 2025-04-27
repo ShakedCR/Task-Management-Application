@@ -1,6 +1,17 @@
 version: '3.8'
 
 services:
+  mongo:
+    image: mongo:5.0
+
+    container_name: mongo_container
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+
   server:
     build:
       context: ./server
@@ -8,6 +19,8 @@ services:
       - "4000:4000"
     env_file:
       - ./server/.env
+    depends_on:
+      - mongo
       
   client:
     build:
@@ -16,4 +29,3 @@ services:
       - "3000:80"
     depends_on:
       - server
-
