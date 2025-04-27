@@ -3,7 +3,6 @@ version: '3.8'
 services:
   mongo:
     image: mongo:5.0
-
     container_name: mongo_container
     restart: always
     ports:
@@ -17,11 +16,11 @@ services:
       context: ./server
     ports:
       - "4000:4000"
-    env_file:
-      - ./server/.env
+    environment:
+      - MONGO_URI=mongodb://admin:password123@mongo:27017/admin
     depends_on:
       - mongo
-      
+
   client:
     build:
       context: ./client
