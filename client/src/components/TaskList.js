@@ -1,21 +1,30 @@
 import { useState, useEffect } from 'react';
 import EditModal from './EditModal';
 
-// Task list component
+function getTodayDate() {
+  const today = new Date();
+  return today.toISOString().split('T')[0];
+}
+
 function TaskList({ listId }) {
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [dueDate, setDueDate] = useState('');
+  const [dueDate, setDueDate] = useState(getTodayDate());
+  const [file, setFile] = useState(null);
+  const [selectedFileName, setSelectedFileName] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTaskId, setEditingTaskId] = useState(null);
   const [editedText, setEditedText] = useState('');
   const [editedDescription, setEditedDescription] = useState('');
   const [editedDueDate, setEditedDueDate] = useState('');
+  const [editedFilePath, setEditedFilePath] = useState('');
+  const [editedFile, setEditedFile] = useState(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState(null);
 
   useEffect(() => {
     if (!listId) return;
-
     fetch(`http://localhost:4000/tasks/${listId}`)
       .then(res => res.json())
       .then(data => {
@@ -28,32 +37,48 @@ function TaskList({ listId }) {
   const addTask = () => {
     if (!title.trim()) return;
 
-    const newTask = { title, description, date: dueDate, listId };
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("date", dueDate);
+    formData.append("listId", listId);
+    if (file) {
+      formData.append("file", file);
+    }
 
     fetch("http://localhost:4000/tasks", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newTask),
+      body: formData,
     })
       .then(res => res.json())
       .then(addedTask => {
         setTasks(prev => [...prev, { ...addedTask, id: addedTask._id }]);
         setTitle('');
         setDescription('');
-        setDueDate('');
+        setDueDate(getTodayDate());
+        setFile(null);
+        setSelectedFileName('');
       })
       .catch(err => console.log("Failed to add task", err));
   };
 
-  const deleteTask = (id, status) => {
-    if (status === 'Done') return;
+  const requestDeleteTask = (task) => {
+    if (task.status === 'Done') return;
+    setTaskToDelete(task);
+    setIsDeleteModalOpen(true);
+  };
 
-    fetch(`http://localhost:4000/tasks/${id}`, {
+  const confirmDeleteTask = () => {
+    if (!taskToDelete) return;
+
+    fetch(`http://localhost:4000/tasks/${taskToDelete.id}`, {
       method: 'DELETE'
     })
       .then(res => {
         if (!res.ok) throw new Error('Failed to delete task');
-        setTasks(tasks.filter(task => task.id !== id));
+        setTasks(tasks.filter(task => task.id !== taskToDelete.id));
+        setIsDeleteModalOpen(false);
+        setTaskToDelete(null);
       })
       .catch(err => {
         console.log('Failed to delete task:', err);
@@ -95,18 +120,38 @@ function TaskList({ listId }) {
     setEditedText(task.title);
     setEditedDescription(task.description || '');
     setEditedDueDate(task.date || '');
+    setEditedFilePath(task.filePath || '');
+    setEditedFile(null);
     setIsModalOpen(true);
   };
 
-  const saveEditedTask = (newTitle, newDesc, newDueDate) => {
+  const handleDeleteFile = () => {
+    fetch(`http://localhost:4000/tasks/${editingTaskId}/file`, {
+      method: 'DELETE'
+    })
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to delete file');
+        setEditedFilePath('');
+        alert("File deleted");
+      })
+      .catch(err => {
+        console.error('Error deleting file:', err);
+        alert('Failed to delete file.');
+      });
+  };
+
+  const saveEditedTask = (newTitle, newDesc, newDueDate, newFile) => {
+    const formData = new FormData();
+    formData.append("title", newTitle);
+    formData.append("description", newDesc);
+    formData.append("date", newDueDate);
+    if (newFile) {
+      formData.append("file", newFile);
+    }
+
     fetch(`http://localhost:4000/tasks/${editingTaskId}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        title: newTitle,
-        description: newDesc,
-        date: newDueDate,
-      }),
+      body: formData,
     })
       .then(res => res.json())
       .then(updated => {
@@ -133,12 +178,24 @@ function TaskList({ listId }) {
                 <strong>{task.title}</strong>
                 <p>{task.description}</p>
                 <small>{task.date && `Due: ${task.date}`}</small>
+                {task.filePath && (
+                  <div>
+                    <a
+                      href={`http://localhost:4000/uploads/${task.filePath}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      download
+                    >
+                      Download file
+                    </a>
+                  </div>
+                )}
               </div>
               {status !== 'Done' && (
                 <>
                   <button onClick={() => advanceStatus(task)}>Advance</button>
                   <button onClick={() => openEditModal(task)}>Edit</button>
-                  <button onClick={() => deleteTask(task.id, task.status)}>Delete</button>
+                  <button onClick={() => requestDeleteTask(task)}>Delete</button>
                 </>
               )}
             </li>
@@ -169,6 +226,32 @@ function TaskList({ listId }) {
           value={dueDate}
           onChange={(e) => setDueDate(e.target.value)}
         />
+
+        {/* Custom file upload button */}
+        <label
+          htmlFor="fileInput"
+          style={{
+            cursor: 'pointer',
+            backgroundColor: '#eee',
+            padding: '8px 12px',
+            borderRadius: '5px',
+            display: 'inline-block',
+            marginBottom: '8px'
+          }}
+        >
+          Upload File
+        </label>
+        <input
+          id="fileInput"
+          type="file"
+          style={{ display: 'none' }}
+          onChange={(e) => {
+            setFile(e.target.files[0]);
+            setSelectedFileName(e.target.files[0]?.name || '');
+          }}
+        />
+        {selectedFileName && <p style={{ fontSize: '0.9rem' }}>{selectedFileName}</p>}
+
         <button onClick={addTask}>Add</button>
       </div>
 
@@ -183,7 +266,24 @@ function TaskList({ listId }) {
         taskDesc={editedDescription}
         taskDueDate={editedDueDate}
         onSave={saveEditedTask}
+        existingFilePath={editedFilePath}
+        onReplaceFile={(file) => setEditedFile(file)}
+        onDeleteFile={handleDeleteFile}
       />
+
+      {isDeleteModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h3>Are you sure you want to delete this task?</h3>
+            <div className="modal-actions" style={{ marginTop: "20px" }}>
+              <button className="confirm" onClick={confirmDeleteTask}>Yes</button>
+              <button className="cancel" onClick={() => setIsDeleteModalOpen(false)}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

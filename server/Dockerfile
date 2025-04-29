@@ -1,4 +1,3 @@
-# Dockerfile עבור צד השרת
 FROM node:18
 
 WORKDIR /app
@@ -6,7 +5,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
-COPY . .
+COPY server.js ./  
+COPY . ./
 
 EXPOSE 4000
 CMD ["npm", "run", "dev"]

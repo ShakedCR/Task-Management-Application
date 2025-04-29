@@ -8,6 +8,8 @@ function App() {
   const [lists, setLists] = useState([]);
   const [activeListId, setActiveListId] = useState(null);
   const [isListModalOpen, setIsListModalOpen] = useState(false);
+  const [isDeleteListModalOpen, setIsDeleteListModalOpen] = useState(false);
+  const [listToDelete, setListToDelete] = useState(null);
 
   useEffect(() => {
     fetch("http://localhost:4000/lists")
@@ -40,16 +42,25 @@ function App() {
       .catch(err => console.log("Failed to add list:", err));
   };
 
-  const deleteList = (id) => {
-    fetch(`http://localhost:4000/lists/${id}`, {
+  const requestDeleteList = (id) => {
+    setListToDelete(id);
+    setIsDeleteListModalOpen(true);
+  };
+
+  const confirmDeleteList = () => {
+    if (!listToDelete) return;
+
+    fetch(`http://localhost:4000/lists/${listToDelete}`, {
       method: "DELETE",
     })
       .then(() => {
-        const updated = lists.filter(list => list.id !== id);
+        const updated = lists.filter(list => list.id !== listToDelete);
         setLists(updated);
-        if (id === activeListId) {
+        if (listToDelete === activeListId) {
           setActiveListId(updated.length ? updated[0].id : null);
         }
+        setIsDeleteListModalOpen(false);
+        setListToDelete(null);
       })
       .catch(err => console.log("Failed to delete list:", err));
   };
@@ -69,7 +80,7 @@ function App() {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  deleteList(list.id);
+                  requestDeleteList(list.id);
                 }}
               >
                 Delete
@@ -89,6 +100,20 @@ function App() {
         onClose={() => setIsListModalOpen(false)}
         onSave={addNewList}
       />
+
+      {isDeleteListModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h3>Are you sure you want to delete this list?</h3>
+            <div className="modal-actions" style={{ marginTop: "20px" }}>
+              <button className="confirm" onClick={confirmDeleteList}>Yes</button>
+              <button className="cancel" onClick={() => setIsDeleteListModalOpen(false)}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -10,10 +10,14 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: password123
+    volumes:
+      - mongo-data:/data/db
 
   server:
     build:
       context: ./server
+    working_dir: /app
+    command: npm run dev
     ports:
       - "4000:4000"
     environment:
@@ -28,3 +32,6 @@ services:
       - "3000:80"
     depends_on:
       - server
+
+volumes:
+  mongo-data:

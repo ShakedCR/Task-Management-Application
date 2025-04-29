@@ -198,10 +198,105 @@ li.task button:hover {
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  background-color: #0072ff;
+  font-size: 16px;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+/* עיצוב חדש לפי סוג הכפתור */
+.modal-actions button.confirm {
+  background-color: #e63946; /* אדום */
   color: white;
 }
 
-.modal-actions button:last-child {
-  background-color: #999;
+.modal-actions button.cancel {
+  background-color: #999; /* אפור */
+  color: white;
+}
+
+/* אפקט hover */
+.modal-actions button:hover {
+  transform: scale(1.05);
+}
+
+.modal-actions button.confirm:hover {
+  background-color: #d62828;
+}
+
+.modal-actions button.cancel:hover {
+  background-color: #777;
+}
+
+
+.btn {
+  padding: 10px 16px;
+  margin: 5px 0;
+  font-size: 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+}
+
+.save-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.save-btn:hover {
+  background-color: #218838;
+}
+
+.cancel-btn {
+  background-color: #6c757d;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background-color: #5a6268;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #c82333;
+}
+
+.download-link {
+  color: #007bff;
+  text-decoration: underline;
+  font-size: 14px;
+}
+
+.download-link:hover {
+  color: #0056b3;
+}
+
+.upload-label {
+  background-color: #00bcd4;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-block;
+  margin-bottom: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.upload-label:hover {
+  background-color: #0097a7;
+}
+
+.upload-section {
+  margin-top: 10px;
+}
+
+.file-actions {
+  margin-top: 10px;
 }
